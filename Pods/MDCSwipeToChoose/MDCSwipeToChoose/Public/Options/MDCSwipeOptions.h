@@ -23,6 +23,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MDCSwipeDirection.h"
 
 @class MDCPanState;
 @class MDCSwipeResult;
@@ -30,7 +31,6 @@
 
 typedef void (^MDCSwipeToChooseOnPanBlock)(MDCPanState *state);
 typedef void (^MDCSwipeToChooseOnChosenBlock)(MDCSwipeResult *state);
-typedef void (^MDCSwipeToChooseOnCancelBlock)(UIView *swipedView);
 
 /*!
  * A set of options used to customize the behavior of the
@@ -57,7 +57,7 @@ typedef void (^MDCSwipeToChooseOnCancelBlock)(UIView *swipedView);
 @property (nonatomic, assign) UIViewAnimationOptions swipeCancelledAnimationOptions;
 
 /*!
- * THe duration of the animation that moves a view to its threshold, caused when `mdc_swipe:`
+ * The duration of the animation that moves a view to its threshold, caused when `mdc_swipe:`
  * is called. A default value is provided in the `-init` method.
  */
 @property (nonatomic, assign) NSTimeInterval swipeAnimationDuration;
@@ -69,8 +69,8 @@ typedef void (^MDCSwipeToChooseOnCancelBlock)(UIView *swipedView);
 @property (nonatomic, assign) UIViewAnimationOptions swipeAnimationOptions;
 
 /*!
- * The distance, in points, that a view must be panned in order to constitue a selection.
- * For example, if the `threshold` is `100.f`, panning the view `101.f` points to the right
+ * The distance, in pixels, that a view must be panned in order to constitue a selection.
+ * For example, if the `threshold` is `100.f`, panning the view `101.f` pixels to the right
  * is considered a selection in the `MDCSwipeDirectionRight` direction. A default value is
  * provided in the `-init` method.
  */
@@ -81,6 +81,12 @@ typedef void (^MDCSwipeToChooseOnCancelBlock)(UIView *swipedView);
  * the angle of rotation.
  */
 @property (nonatomic, assign) CGFloat rotationFactor;
+
+/*!
+ * Contains the directions on which the swipe will be recognized
+ * Must be set using a OR operator (like MDCSwipeDirectionUp | MDCSwipeDirectionDown)
+ */
+@property (nonatomic, assign) MDCSwipeDirection allowedSwipeDirections;
 
 /*!
  * A callback to be executed when the view is panned. The block takes an instance of
@@ -97,14 +103,6 @@ typedef void (^MDCSwipeToChooseOnCancelBlock)(UIView *swipedView);
  block in order to properly notify the delegate of the swipe result.
  */
 @property (nonatomic, copy) MDCSwipeToChooseOnChosenBlock onChosen;
-
-/*!
- * A callback to be executed when the view is swiped and the swipe is cancelled 
- (i.e. because view:shouldBeChosen: delegate callback returned NO for swiped view).
- The view that was swiped is passed into this block so that you can restore its 
- state in this callback. May be nil.
- */
-@property (nonatomic, copy) MDCSwipeToChooseOnCancelBlock onCancel;
 
 /*!
  * The default callback for when a view is swiped an chosen. This callback moves the view

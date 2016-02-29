@@ -55,6 +55,12 @@
 @property (nonatomic, assign) CGFloat likedRotationAngle;
 
 /*!
+ * Contains the directions on which the swipe will be recognized
+ * Must be set using a OR operator (like MDCSwipeDirectionUp | MDCSwipeDirectionDown)
+ */
+@property (nonatomic, assign) MDCSwipeDirection allowedSwipeDirections;
+
+/*!
  * The text displayed in the `nopeView`. A default value is provided in the
  * `-init` method.
  */

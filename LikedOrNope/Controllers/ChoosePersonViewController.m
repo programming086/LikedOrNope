@@ -84,7 +84,7 @@ static const CGFloat ChoosePersonButtonVerticalPadding = 20.f;
 - (void)view:(UIView *)view wasChosenWithDirection:(MDCSwipeDirection)direction {
     // MDCSwipeToChooseView shows "NOPE" on swipes to the left,
     // and "LIKED" on swipes to the right.
-    if (direction == MDCSwipeDirectionLeft) {
+    if (direction == MDCSwipeDirectionLeft || direction == MDCSwipeDirectionUp) {
         NSLog(@"You noped %@.", self.currentPerson.name);
     } else {
         NSLog(@"You liked %@.", self.currentPerson.name);
@@ -159,8 +159,15 @@ static const CGFloat ChoosePersonButtonVerticalPadding = 20.f;
     // a delegate, and provide a custom callback that moves the back card view
     // based on how far the user has panned the front card view.
     MDCSwipeToChooseViewOptions *options = [MDCSwipeToChooseViewOptions new];
+  
     options.delegate = self;
     options.threshold = 160.f;
+  
+    // Choose Allowed Swipe Directions
+    // options.allowedSwipeDirections = MDCSwipeDirectionLeft | MDCSwipeDirectionRight | MDCSwipeDirectionUp | MDCSwipeDirectionDown;
+  
+    options.allowedSwipeDirections = /*MDCSwipeDirectionLeft | MDCSwipeDirectionRight*/MDCSwipeDirectionUp | MDCSwipeDirectionDown;
+  
     options.onPan = ^(MDCPanState *state){
         CGRect frame = [self backCardViewFrame];
         self.backCardView.frame = CGRectMake(frame.origin.x,
@@ -203,7 +210,7 @@ static const CGFloat ChoosePersonButtonVerticalPadding = 20.f;
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     UIImage *image = [UIImage imageNamed:@"nope"];
     button.frame = CGRectMake(ChoosePersonButtonHorizontalPadding,
-                              CGRectGetMaxY(self.frontCardView.frame) + ChoosePersonButtonVerticalPadding,
+                              CGRectGetMaxY(self.backCardView.frame) + ChoosePersonButtonVerticalPadding,
                               image.size.width,
                               image.size.height);
     [button setImage:image forState:UIControlStateNormal];
@@ -222,7 +229,7 @@ static const CGFloat ChoosePersonButtonVerticalPadding = 20.f;
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     UIImage *image = [UIImage imageNamed:@"liked"];
     button.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - image.size.width - ChoosePersonButtonHorizontalPadding,
-                              CGRectGetMaxY(self.frontCardView.frame) + ChoosePersonButtonVerticalPadding,
+                              CGRectGetMaxY(self.backCardView.frame) + ChoosePersonButtonVerticalPadding,
                               image.size.width,
                               image.size.height);
     [button setImage:image forState:UIControlStateNormal];
@@ -240,12 +247,12 @@ static const CGFloat ChoosePersonButtonVerticalPadding = 20.f;
 
 // Programmatically "nopes" the front card view.
 - (void)nopeFrontCardView {
-    [self.frontCardView mdc_swipe:MDCSwipeDirectionLeft];
+    [self.frontCardView mdc_swipe:MDCSwipeDirectionDown];
 }
 
 // Programmatically "likes" the front card view.
 - (void)likeFrontCardView {
-    [self.frontCardView mdc_swipe:MDCSwipeDirectionRight];
+    [self.frontCardView mdc_swipe:MDCSwipeDirectionUp];
 }
 
 @end

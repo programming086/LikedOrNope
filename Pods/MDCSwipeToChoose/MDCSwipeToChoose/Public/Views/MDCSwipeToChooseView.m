@@ -59,7 +59,6 @@ static CGFloat const MDCSwipeToChooseViewLabelWidth = 65.f;
 - (void)setupView {
     self.backgroundColor = [UIColor clearColor];
     self.layer.cornerRadius = 5.f;
-    self.layer.masksToBounds = YES;
     self.layer.borderWidth = 2.f;
     self.layer.borderColor = [UIColor colorWith8BitRed:220.f
                                                  green:220.f
@@ -104,21 +103,38 @@ static CGFloat const MDCSwipeToChooseViewLabelWidth = 65.f;
     MDCSwipeOptions *options = [MDCSwipeOptions new];
     options.delegate = self.options.delegate;
     options.threshold = self.options.threshold;
+    options.allowedSwipeDirections = self.options.allowedSwipeDirections;
 
     __block UIView *likedImageView = self.likedView;
     __block UIView *nopeImageView = self.nopeView;
     __weak MDCSwipeToChooseView *weakself = self;
+  
     options.onPan = ^(MDCPanState *state) {
+      
         if (state.direction == MDCSwipeDirectionNone) {
             likedImageView.alpha = 0.f;
             nopeImageView.alpha = 0.f;
+          
         } else if (state.direction == MDCSwipeDirectionLeft) {
+          
             likedImageView.alpha = 0.f;
             nopeImageView.alpha = state.thresholdRatio;
+          
         } else if (state.direction == MDCSwipeDirectionRight) {
+          
             likedImageView.alpha = state.thresholdRatio;
             nopeImageView.alpha = 0.f;
+          
+        } else if(state.direction == MDCSwipeDirectionUp) {
+          
+          likedImageView.alpha = state.thresholdRatio;
+          nopeImageView.alpha = 0.f;
+          
+        } else if(state.direction == MDCSwipeDirectionDown) {
+          likedImageView.alpha = 0.f;
+          nopeImageView.alpha = state.thresholdRatio;
         }
+
 
         if (weakself.options.onPan) {
             weakself.options.onPan(state);
