@@ -3,10 +3,11 @@
 //  MDCSwipeToChoose
 //
 //  Created by Brian Ivan Gesiak on 4/8/14.
+//  Modified by Brovko Roman for support Up/down swipe for like/dislike
 //  Copyright (c) 2014 modocache. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "MDCSwipeDirection.h"
 
 /*!

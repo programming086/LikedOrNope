@@ -138,7 +138,7 @@
 		1D137903419EC6E1EA0A80EC26E094CF /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				69F7515F9AA526D2EF5E78966855F5FB /* MDCSwipeToChoose */,
+				69F7515F9AA526D2EF5E78966855F5FB /* MDCSwipeToChoose-0.2.3-improve */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -151,7 +151,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		69F7515F9AA526D2EF5E78966855F5FB /* MDCSwipeToChoose */ = {
+		69F7515F9AA526D2EF5E78966855F5FB /* MDCSwipeToChoose-0.2.3-improve */ = {
 			isa = PBXGroup;
 			children = (
 				7E5DD9ADA78DEBD6ED01977C12481D92 /* MDCGeometry.h */,
@@ -179,6 +179,7 @@
 				62924FABDA93C5D47ABCBEBE6150A44E /* UIView+MDCSwipeToChoose.m */,
 				A554DBDF71BEC4E5B6310B3510B19354 /* Support Files */,
 			);
+			name = "MDCSwipeToChoose-0.2.3-improve";
 			path = MDCSwipeToChoose;
 			sourceTree = "<group>";
 		};

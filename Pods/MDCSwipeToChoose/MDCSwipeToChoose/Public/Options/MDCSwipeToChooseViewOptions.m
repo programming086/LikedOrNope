@@ -1,6 +1,7 @@
 //
 // MDCSwipeToChooseViewOptions.m
 //
+//  Modified by Brovko Roman for support Up/down swipe for like/dislike
 // Copyright (c) 2014 to present, Brian Gesiak @modocache
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
