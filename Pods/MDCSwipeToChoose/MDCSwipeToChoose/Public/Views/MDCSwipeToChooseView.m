@@ -73,28 +73,41 @@ static CGFloat const MDCSwipeToChooseViewLabelWidth = 65.f;
 }
 
 - (void)constructLikedView {
-    CGRect frame = CGRectMake(MDCSwipeToChooseViewHorizontalPadding,
-                              MDCSwipeToChooseViewTopPadding,
-                              CGRectGetMidX(_imageView.bounds),
-                              MDCSwipeToChooseViewLabelWidth);
+    MDCSwipeDirection directions = self.options.allowedSwipeDirections;
+    BOOL isUpDownSwipeForLikeDislike = (directions & MDCSwipeDirectionUp) && (directions & MDCSwipeDirectionDown);
+    
+    CGFloat width = CGRectGetMidX(_imageView.bounds);
+    CGFloat yOrigin = isUpDownSwipeForLikeDislike ? CGRectGetMaxY(_imageView.bounds) - MDCSwipeToChooseViewLabelWidth - MDCSwipeToChooseViewTopPadding : MDCSwipeToChooseViewTopPadding;
+    CGFloat xOrigin = isUpDownSwipeForLikeDislike ? width / 2 : MDCSwipeToChooseViewHorizontalPadding;
+    
+    CGRect frame = CGRectMake(xOrigin, yOrigin, width, MDCSwipeToChooseViewLabelWidth);
+    
+
     self.likedView = [[UIView alloc] initWithFrame:frame];
     [self.likedView constructBorderedLabelWithText:self.options.likedText
                                              color:self.options.likedColor
-                                             angle:self.options.likedRotationAngle];
+                                             angle:isUpDownSwipeForLikeDislike ? 0.0f : self.options.likedRotationAngle];
     self.likedView.alpha = 0.f;
     [self.imageView addSubview:self.likedView];
 }
 
 - (void)constructNopeImageView {
+    MDCSwipeDirection directions = self.options.allowedSwipeDirections;
+    BOOL isUpDownSwipeForLikeDislike = (directions & MDCSwipeDirectionUp) && (directions & MDCSwipeDirectionDown);
+    
     CGFloat width = CGRectGetMidX(self.imageView.bounds);
-    CGFloat xOrigin = CGRectGetMaxX(_imageView.bounds) - width - MDCSwipeToChooseViewHorizontalPadding;
-    self.nopeView = [[UIImageView alloc] initWithFrame:CGRectMake(xOrigin,
-                                                                  MDCSwipeToChooseViewTopPadding,
-                                                                  width,
-                                                                  MDCSwipeToChooseViewLabelWidth)];
+    CGFloat xOrigin = isUpDownSwipeForLikeDislike ? width / 2 : CGRectGetMaxX(_imageView.bounds) - width - MDCSwipeToChooseViewHorizontalPadding;
+    
+    CGRect frame = CGRectMake(xOrigin,
+                              MDCSwipeToChooseViewTopPadding,
+                              width,
+                              MDCSwipeToChooseViewLabelWidth);
+    
+    
+    self.nopeView = [[UIImageView alloc] initWithFrame:frame];
     [self.nopeView constructBorderedLabelWithText:self.options.nopeText
                                             color:self.options.nopeColor
-                                            angle:self.options.nopeRotationAngle];
+                                            angle:isUpDownSwipeForLikeDislike ? 0.0f : self.options.nopeRotationAngle];
     self.nopeView.alpha = 0.f;
     [self.imageView addSubview:self.nopeView];
 }

@@ -166,7 +166,7 @@ static const CGFloat ChoosePersonButtonVerticalPadding = 20.f;
     // Choose Allowed Swipe Directions
     // options.allowedSwipeDirections = MDCSwipeDirectionLeft | MDCSwipeDirectionRight | MDCSwipeDirectionUp | MDCSwipeDirectionDown;
   
-    options.allowedSwipeDirections = /*MDCSwipeDirectionLeft | MDCSwipeDirectionRight*/MDCSwipeDirectionUp | MDCSwipeDirectionDown;
+    options.allowedSwipeDirections = MDCSwipeDirectionUp | MDCSwipeDirectionDown;
   
     options.onPan = ^(MDCPanState *state){
         CGRect frame = [self backCardViewFrame];
