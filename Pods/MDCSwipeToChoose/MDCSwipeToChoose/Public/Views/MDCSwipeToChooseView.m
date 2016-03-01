@@ -131,10 +131,11 @@ static CGFloat const MDCSwipeToChooseViewLabelWidth = 65.f;
           nopeImageView.alpha = 0.f;
           
         } else if(state.direction == MDCSwipeDirectionDown) {
+            
           likedImageView.alpha = 0.f;
           nopeImageView.alpha = state.thresholdRatio;
+            
         }
-
 
         if (weakself.options.onPan) {
             weakself.options.onPan(state);

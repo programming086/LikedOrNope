@@ -82,9 +82,9 @@ static const CGFloat ChoosePersonButtonVerticalPadding = 20.f;
 
 // This is called then a user swipes the view fully left or right.
 - (void)view:(UIView *)view wasChosenWithDirection:(MDCSwipeDirection)direction {
-    // MDCSwipeToChooseView shows "NOPE" on swipes to the left,
-    // and "LIKED" on swipes to the right.
-    if (direction == MDCSwipeDirectionLeft || direction == MDCSwipeDirectionUp) {
+    // MDCSwipeToChooseView shows "NOPE" on swipes to the left or to the down,
+    // and "LIKED" on swipes to the right or to the up.
+    if (direction == MDCSwipeDirectionLeft || direction == MDCSwipeDirectionDown) {
         NSLog(@"You noped %@.", self.currentPerson.name);
     } else {
         NSLog(@"You liked %@.", self.currentPerson.name);

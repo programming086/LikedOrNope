@@ -29,7 +29,7 @@
  * `MDCSwipeToChooseView` considers a swipe to the left as negative,
  * and a swipe to the right as positive.
  */
-typedef NS_ENUM(NSInteger, MDCSwipeDirection) {
+typedef NS_OPTIONS(NSInteger, MDCSwipeDirection) {
     MDCSwipeDirectionNone = 1,
     MDCSwipeDirectionLeft = 2,
     MDCSwipeDirectionRight = 4,

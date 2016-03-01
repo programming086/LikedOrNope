@@ -41,7 +41,7 @@
 
       //        _allowedSwipeDirections = MDCSwipeDirectionUp | MDCSwipeDirectionDown | MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
       
-      _allowedSwipeDirections = MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
+      _allowedSwipeDirections = /*MDCSwipeDirectionLeft | MDCSwipeDirectionRight*/ MDCSwipeDirectionUp | MDCSwipeDirectionDown;
 
         _onChosen = [[self class] exitScreenOnChosenWithDuration:0.1
                                                          options:UIViewAnimationOptionCurveLinear];
