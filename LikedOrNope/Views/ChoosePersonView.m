@@ -71,12 +71,12 @@ static const CGFloat ChoosePersonViewImageLabelWidth = 42.f;
     _informationView.clipsToBounds = YES;
     _informationView.autoresizingMask = UIViewAutoresizingFlexibleWidth |
                                         UIViewAutoresizingFlexibleTopMargin;
-    [self addSubview:_informationView];
+//    [self addSubview:_informationView];
 
-    [self constructNameLabel];
-    [self constructCameraImageLabelView];
-    [self constructInterestsImageLabelView];
-    [self constructFriendsImageLabelView];
+//    [self constructNameLabel];
+//    [self constructCameraImageLabelView];
+//    [self constructInterestsImageLabelView];
+//    [self constructFriendsImageLabelView];
 }
 
 - (void)constructNameLabel {
