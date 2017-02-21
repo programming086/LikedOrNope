@@ -80,6 +80,24 @@
 @property (nonatomic, assign) CGFloat nopeRotationAngle;
 
 /*!
+ * The text displayed in the `superLikedView`. A default value is provided in the
+ * `-init` method.
+ */
+@property (nonatomic, copy) NSString *superLikedText;
+
+/*!
+ * The color of the text and border of the `superLikedView`. A default value is provided in the
+ * `-init` method.
+ */
+@property (nonatomic, strong) UIColor *superLikedColor;
+
+/*!
+ * The rotation angle of the `superLikedView`. A default value is provided in the
+ * `-init` method.
+ */
+@property (nonatomic, assign) CGFloat superLikedRotationAngle;
+
+/*!
  * The distance, in pixels, that a view must be panned in order to constitue a selection.
  * For example, if the `threshold` is `100.f`, panning the view `101.f` pixels to the right
  * is considered a selection in the `MDCSwipeDirectionRight` direction. A default value is

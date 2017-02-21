@@ -1,7 +1,7 @@
 //
 // UIView+MDCSwipeToChoose.m
 //
-//  Modified by Brovko Roman for support Up/down swipe for like/dislike
+//  Modified by Brovko Roman for support Up/down swipe for like/dislike. Add support super like (up swipe)
 // Copyright (c) 2014 to present, Brian Gesiak @modocache
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -138,7 +138,7 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
                           delay:0.0
                         options:self.mdc_options.swipeCancelledAnimationOptions
                      animations:^{
-                         self.transform = CGAffineTransformIdentity;
+                         self.layer.transform = self.mdc_viewState.originalTransform;
                          self.center = self.mdc_viewState.originalCenter;
                      } completion:^(BOOL finished) {
                          id<MDCSwipeToChooseDelegate> delegate = self.mdc_options.delegate;
@@ -154,6 +154,12 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
     if ([delegate respondsToSelector:@selector(view:shouldBeChosenWithDirection:)]) {
         BOOL should = [delegate view:self shouldBeChosenWithDirection:direction];
         if (!should) {
+            // TODO: without use
+            [self mdc_returnToOriginalCenter];
+            if (self.mdc_options.onCancel != nil){
+                self.mdc_options.onCancel(self);
+            }
+            //------
             return;
         }
     }
@@ -173,9 +179,12 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
 - (void)mdc_executeOnPanBlockForTranslation:(CGPoint)translation {
     if (self.mdc_options.onPan) {
         
+        
         MDCSwipeDirection directions = [self mdc_options].allowedSwipeDirections;
         
         CGFloat thresholdRatio = 0.f;
+        
+        BOOL isUpDownSwipeLikedDisliked = HAS_OPT(directions, MDCSwipeDirectionUp) && HAS_OPT(directions, MDCSwipeDirectionDown);
         
         if (HAS_OPT(directions, MDCSwipeDirectionRight) && HAS_OPT(directions, MDCSwipeDirectionLeft)) {
             thresholdRatio = MIN(1.f, fabsf(translation.x)/self.mdc_options.threshold);
@@ -184,8 +193,16 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
         }
 
         MDCSwipeDirection direction = MDCSwipeDirectionNone;
-      
-        if (HAS_OPT(directions, MDCSwipeDirectionRight) && translation.x > 0.f) {
+        
+        BOOL isSuperLikeSwipeUsed = HAS_OPT(directions, MDCSwipeDirectionUp) && !HAS_OPT(directions, MDCSwipeDirectionDown);
+        
+        if (isSuperLikeSwipeUsed && (translation.y < (-CGRectGetHeight(self.frame) / 4))) {
+            
+            direction = MDCSwipeDirectionUp;
+            
+            thresholdRatio = MIN(1.f, fabsf(translation.y)/self.mdc_options.threshold);
+            
+        } else if (HAS_OPT(directions, MDCSwipeDirectionRight) && translation.x > 0.f) {
           
             direction = MDCSwipeDirectionRight;
           
@@ -201,6 +218,11 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
           
             direction = MDCSwipeDirectionDown;
         }
+        
+        
+#if DEBUG
+        NSLog(@">> %s direction: %@ translation: %@ thresholdRatio: %@", __FUNCTION__, @(direction), NSStringFromCGPoint(translation), @(thresholdRatio));
+#endif
 
         MDCPanState *state = [MDCPanState new];
         state.view = self;
@@ -217,6 +239,11 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
     CGFloat rotation = MDCDegreesToRadians(translation.x/100 * self.mdc_options.rotationFactor);
     self.transform = CGAffineTransformRotate(CGAffineTransformIdentity,
                                              rotationDirection * rotation);
+    
+    // old implement
+    self.layer.transform = CATransform3DMakeRotation(rotationDirection * rotation, 0.0, 0.0, 1.0);
+    //----
+    
 }
 
 #pragma mark Threshold
@@ -244,7 +271,8 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
 
 - (MDCSwipeDirection)mdc_directionOfExceededThreshold {
   
-  MDCSwipeDirection directions = [self mdc_options].allowedSwipeDirections;
+    MDCSwipeDirection directions = [self mdc_options].allowedSwipeDirections;
+    
   
     if (HAS_OPT(directions, MDCSwipeDirectionRight) && self.center.x > self.mdc_viewState.originalCenter.x + self.mdc_options.threshold) {
     
@@ -279,6 +307,7 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
 
     if (panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
         self.mdc_viewState.originalCenter = view.center;
+        self.mdc_viewState.originalTransform = view.layer.transform;
 
         // If the pan gesture originated at the top half of the view, rotate the view
         // away from the center. Otherwise, rotate towards the center.

@@ -36,6 +36,7 @@
     self.layer.cornerRadius = 10.f;
 
     UILabel *label = [[UILabel alloc] initWithFrame:self.bounds];
+    label.numberOfLines = 0;
     label.text = [text uppercaseString];
     label.textAlignment = NSTextAlignmentCenter;
     label.font = [UIFont fontWithName:@"HelveticaNeue-CondensedBlack"

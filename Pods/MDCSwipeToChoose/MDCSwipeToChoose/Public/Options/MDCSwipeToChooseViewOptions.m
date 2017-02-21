@@ -38,12 +38,13 @@
         _nopeText = [NSLocalizedString(@"nope", nil) uppercaseString];
         _nopeColor = [UIColor colorWith8BitRed:247.f green:91.f blue:37.f alpha:1.f];
         _nopeRotationAngle = 15.f;
+        
+        _superLikedText = [NSLocalizedString(@"Super\nlike", nil) uppercaseString];
+        _superLikedColor = [UIColor blueColor];
+        _superLikedRotationAngle = -15.f;
+
 
         _threshold = 100.f;
-      
-      //        _allowedSwipeDirections = MDCSwipeDirectionUp | MDCSwipeDirectionDown | MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
-      
-      _allowedSwipeDirections = MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
     }
     return self;
 }

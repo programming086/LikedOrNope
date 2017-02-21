@@ -50,6 +50,7 @@ static CGFloat const MDCSwipeToChooseViewLabelWidth = 65.f;
         [self constructImageView];
         [self constructLikedView];
         [self constructNopeImageView];
+        [self constructSuperLikedView];
         [self setupSwipeToChoose];
     }
     return self;
@@ -92,6 +93,29 @@ static CGFloat const MDCSwipeToChooseViewLabelWidth = 65.f;
     [self.imageView addSubview:self.likedView];
 }
 
+- (void)constructSuperLikedView {
+    MDCSwipeDirection directions = self.options.allowedSwipeDirections;
+    BOOL isUpDownSwipeForLikeDislike = (directions & MDCSwipeDirectionUp) && (directions & MDCSwipeDirectionDown);
+    
+    if (isUpDownSwipeForLikeDislike || !(directions & MDCSwipeDirectionUp)) {
+        return;
+    }
+    
+    CGFloat width = CGRectGetMidX(_imageView.bounds);
+    CGFloat yOrigin = CGRectGetMaxY(_imageView.bounds) - 2 * MDCSwipeToChooseViewLabelWidth - MDCSwipeToChooseViewTopPadding;
+    CGFloat xOrigin = width / 2;
+    
+    CGRect frame = CGRectMake(xOrigin, yOrigin, width, 2 * MDCSwipeToChooseViewLabelWidth);
+
+    self.superLikedView = [[UIView alloc] initWithFrame:frame];
+    [self.superLikedView constructBorderedLabelWithText:self.options.superLikedText
+                                             color:self.options.superLikedColor
+                                             angle:self.options.superLikedRotationAngle];
+    self.superLikedView.alpha = 0.f;
+    [self.imageView addSubview:self.superLikedView];
+
+}
+
 - (void)constructNopeImageView {
     MDCSwipeDirection directions = self.options.allowedSwipeDirections;
     BOOL isUpDownSwipeForLikeDislike = (directions & MDCSwipeDirectionUp) && (directions & MDCSwipeDirectionDown);
@@ -118,25 +142,23 @@ static CGFloat const MDCSwipeToChooseViewLabelWidth = 65.f;
     options.delegate = self.options.delegate;
     options.threshold = self.options.threshold;
     options.allowedSwipeDirections = self.options.allowedSwipeDirections;
+    
+    MDCSwipeDirection directions = self.options.allowedSwipeDirections;
+    BOOL isUpDownSwipeForLikeDislike = (directions & MDCSwipeDirectionUp) && (directions & MDCSwipeDirectionDown);
+
 
     __block UIView *likedImageView = self.likedView;
     __block UIView *nopeImageView = self.nopeView;
+    __block UIView *superLikedImageView = self.superLikedView;
     __weak MDCSwipeToChooseView *weakself = self;
   
-    options.onPan = ^(MDCPanState *state) {
+    options.onPan = isUpDownSwipeForLikeDislike ? ^(MDCPanState *state) {
       
-        if (state.direction == MDCSwipeDirectionNone) {
+        if (state.direction == MDCSwipeDirectionNone ||
+            state.direction == MDCSwipeDirectionLeft ||
+            state.direction == MDCSwipeDirectionRight) {
+
             likedImageView.alpha = 0.f;
-            nopeImageView.alpha = 0.f;
-          
-        } else if (state.direction == MDCSwipeDirectionLeft) {
-          
-            likedImageView.alpha = 0.f;
-            nopeImageView.alpha = state.thresholdRatio;
-          
-        } else if (state.direction == MDCSwipeDirectionRight) {
-          
-            likedImageView.alpha = state.thresholdRatio;
             nopeImageView.alpha = 0.f;
           
         } else if(state.direction == MDCSwipeDirectionUp) {
@@ -151,6 +173,38 @@ static CGFloat const MDCSwipeToChooseViewLabelWidth = 65.f;
             
         }
 
+        if (weakself.options.onPan) {
+            weakself.options.onPan(state);
+        }
+    } : ^(MDCPanState *state) {
+        
+        if (state.direction == MDCSwipeDirectionNone ||
+            state.direction == MDCSwipeDirectionDown) {
+            
+            likedImageView.alpha = 0.f;
+            nopeImageView.alpha = 0.f;
+            superLikedImageView.alpha = 0.f;
+            
+        } else if (state.direction == MDCSwipeDirectionLeft) {
+            
+            likedImageView.alpha = 0.f;
+            nopeImageView.alpha = state.thresholdRatio;
+            superLikedImageView.alpha = 0.f;
+            
+        } else if (state.direction == MDCSwipeDirectionRight) {
+            
+            likedImageView.alpha = state.thresholdRatio;
+            nopeImageView.alpha = 0.f;
+            superLikedImageView.alpha = 0.f;
+            
+        } else if(state.direction == MDCSwipeDirectionUp) {
+            
+            likedImageView.alpha = 0.f;
+            nopeImageView.alpha = 0.f;
+            superLikedImageView.alpha = state.thresholdRatio;
+            
+        }
+        
         if (weakself.options.onPan) {
             weakself.options.onPan(state);
         }

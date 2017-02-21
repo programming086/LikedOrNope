@@ -40,10 +40,6 @@
         _swipeAnimationOptions = UIViewAnimationOptionCurveEaseIn;
         _rotationFactor = 3.f;
 
-      //        _allowedSwipeDirections = MDCSwipeDirectionUp | MDCSwipeDirectionDown | MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
-      
-      _allowedSwipeDirections = /*MDCSwipeDirectionLeft | MDCSwipeDirectionRight*/ MDCSwipeDirectionUp | MDCSwipeDirectionDown;
-
         _onChosen = [[self class] exitScreenOnChosenWithDuration:0.1
                                                          options:UIViewAnimationOptionCurveLinear];
     }
