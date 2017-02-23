@@ -81,15 +81,28 @@ static const CGFloat ChoosePersonButtonVerticalPadding = 20.f;
     NSLog(@"You couldn't decide on %@.", self.currentPerson.name);
 }
 
-// This is called then a user swipes the view fully left or right.
+// This is called then a user swipes the view fully left or right or up.
 - (void)view:(UIView *)view wasChosenWithDirection:(MDCSwipeDirection)direction {
     // MDCSwipeToChooseView shows "NOPE" on swipes to the left or to the down,
     // and "LIKED" on swipes to the right or to the up.
-    if (direction == MDCSwipeDirectionLeft || direction == MDCSwipeDirectionDown) {
-        NSLog(@"You noped %@.", self.currentPerson.name);
-    } else {
-        NSLog(@"You liked %@.", self.currentPerson.name);
+    
+    switch (direction) {
+        case MDCSwipeDirectionLeft:
+            NSLog(@"You noped %@.", self.currentPerson.name);
+            break;
+            
+        case MDCSwipeDirectionRight:
+            NSLog(@"You liked %@.", self.currentPerson.name);
+            break;
+            
+        case MDCSwipeDirectionUp:
+            NSLog(@"You super liked %@.", self.currentPerson.name);
+            break;
+            
+        default:
+            break;
     }
+    
 
     // MDCSwipeToChooseView removes the view from the view hierarchy
     // after it is swiped (this behavior can be customized via the
@@ -242,18 +255,47 @@ static const CGFloat ChoosePersonButtonVerticalPadding = 20.f;
                action:@selector(likeFrontCardView)
      forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
+    
+    
+    CGRect frame = button.frame;
+    frame.origin.x += CGRectGetWidth(frame) + 15;
+    
+    [self constructSuperLikedButtonWithFrame:frame];
+}
+
+- (void)constructSuperLikedButtonWithFrame:(CGRect)frame {
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    button.frame = frame;
+    
+    [button setTitle:@"Super like" forState:UIControlStateNormal];
+    
+    [button setTintColor:[UIColor colorWithRed:29.f/255.f
+                                         green:245.f/255.f
+                                          blue:106.f/255.f
+                                         alpha:1.f]];
+    [button addTarget:self
+               action:@selector(superLikeFrontCardView)
+     forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+    
 }
 
 #pragma mark Control Events
 
 // Programmatically "nopes" the front card view.
 - (void)nopeFrontCardView {
-    [self.frontCardView mdc_swipe:MDCSwipeDirectionDown];
+    [self.frontCardView mdc_swipe:MDCSwipeDirectionLeft];
 }
 
 // Programmatically "likes" the front card view.
 - (void)likeFrontCardView {
+    [self.frontCardView mdc_swipe:MDCSwipeDirectionRight];
+}
+
+- (void)superLikeFrontCardView {
     [self.frontCardView mdc_swipe:MDCSwipeDirectionUp];
 }
+
 
 @end
